@@ -1,34 +1,38 @@
-import React, { useState } from 'react';
-import { useAsync } from 'react-async';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { setToken } from './utils';
+import React, { useState } from "react";
+import { useAsync } from "react-async";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { setToken } from "./utils";
 const Login = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate()
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log('Username:', username);
-    console.log('Password:', password);
-    const tenantId= username === 'vara@gmail.com'? 5 :1;
-    console.log(tenantId,'---------------------')
-    const result = await axios.post('http://localhost:3030/api/login', {
+    console.log("Username:", username);
+    console.log("Password:", password);
+    const tenantId = username === "dhruv@gmail.com" ? 2 : 1;
+    console.log(tenantId, "---------------------");
+    const result = await axios.post(
+      "http://localhost:3030/api/login",
+      {
         username,
         password,
-      }, {
+      },
+      {
         headers: {
-          'Content-Type': 'application/json',
-          'TenantId': tenantId,
+          "Content-Type": "application/json",
+          TenantId: tenantId,
         },
-      });
-       if(result){
-        console.log('Result', result)
-        console.log('-=======', result.data.user)
-        setToken(result.data.user)
-        navigate('/home');
-     }
+      }
+    );
+    if (result) {
+      console.log("Result", result);
+      console.log("-=======", result.data.user);
+      setToken(result.data.user);
+      navigate("/home");
+    }
   };
   return (
     <div>
