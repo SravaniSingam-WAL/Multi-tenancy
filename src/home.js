@@ -72,7 +72,21 @@ const Home = () => {
     console.log(result.data.data)
     setAgreementDetails(result.data.data);
   };
-
+const addFunction = async()=>{
+  const token = getToken();
+  console.log(token);
+  const email = getEmail();
+  console.log(email);
+  const tenantId = email === "dhruv@gmail.com" ? 2 : 1;
+  const result = await axios.get("http://localhost:3030/api/add", {
+    headers: {
+      Authorization: token,
+      TenantId: tenantId,
+    },
+  });
+  console.log(result.data.data);
+  console.log(typeof result.data.data);
+ }
   return (
     <div>
       <h2>Home Page</h2>
@@ -83,6 +97,8 @@ const Home = () => {
         <li key={item.id}>{item.contractNumber}</li>
       ))}
     </ul>
+    <br></br>
+    <button onClick={addFunction}>Add</button>
       <br></br>
       <br></br>
       <label htmlFor="searchInput">Search Contract Number</label>
