@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { getToken, getEmail } from "./utils";
-
+import { getToken, getEmail, getName } from "./utils";
+import { API_URL } from "./config";
 const Home = () => {
   const [agreementDetails, setAgreementDetails] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [contractNumber, setContractNumber] = useState();
   const [searchResult,setSearchResult] =useState()
+  const name =getName()
   const handleSearch = async (e) => {
     console.log(e.target.value, "----value--------");
     setSearchTerm(e.target.value);
@@ -18,7 +19,7 @@ const Home = () => {
     
     if(e.target.value){
       const result = await axios.get(
-        `http://localhost:3030/api/agreement/${e.target.value}`,
+        `${API_URL}/api/agreement/${e.target.value}`,
         {
           headers: {
             Authorization: token,
@@ -42,7 +43,7 @@ const Home = () => {
     const tenantId = email === "dhruv@gmail.com" ? 2 : 1;
     console.log(e.target.value, "----value--------");
     const result = await axios.post(
-      "http://localhost:3030/api/agreement",
+      `${API_URL}/api/agreement`,
       {contractInfo
       },
       {
@@ -61,7 +62,7 @@ const Home = () => {
     const email = getEmail();
     console.log(email);
     const tenantId = email === "dhruv@gmail.com" ? 2 : 1;
-    const result = await axios.get("http://localhost:3030/api/agreements", {
+    const result = await axios.get(`${API_URL}/api/agreements`, {
       headers: {
         Authorization: token,
         TenantId: tenantId,
@@ -78,7 +79,7 @@ const addFunction = async()=>{
   const email = getEmail();
   console.log(email);
   const tenantId = email === "dhruv@gmail.com" ? 2 : 1;
-  const result = await axios.get("http://localhost:3030/api/add", {
+  const result = await axios.get(`${API_URL}/api/add`, {
     headers: {
       Authorization: token,
       TenantId: tenantId,
@@ -89,8 +90,8 @@ const addFunction = async()=>{
  }
   return (
     <div>
-      <h2>Home Page</h2>
-      <h2>User Information</h2>
+      <h4 className="welcomeText">Welcome {name}! welcome to the OnePortal App.</h4>
+      <p className="para">Home Page for One Portal Application</p>
       <button onClick={getAgreementDetails}>Get Agreement Details</button>
       <ul>
       {agreementDetails.map((item) => (

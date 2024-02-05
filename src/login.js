@@ -1,21 +1,29 @@
 import React, { useState } from "react";
-import { useAsync } from "react-async";
+//import { useAsync } from "react-async";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { setToken } from "./utils";
+import { API_URL } from "./config";
+import './login.scss';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [error,setError] = useState("")
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log("Username:", username);
     console.log("Password:", password);
+    console.log("Password:", API_URL);
     const tenantId = username === "dhruv@gmail.com" ? 2 : 1;
     console.log(tenantId, "---------------------");
+
+    try{
     const result = await axios.post(
-      "http://localhost:3030/api/login",
+      `${API_URL}/api/login`,
       {
         username,
         password,
@@ -33,32 +41,56 @@ const Login = () => {
       setToken(result.data.user);
       navigate("/home");
     }
+  }  catch(error){
+    if(error.response && error.response.status === 401){
+      console.log('Invalid email or password')
+      setError('Invalid email or password')
+    }
+    else{
+    console.log(error.message,'response')
+    setError(error.message)
+    }
+  }
   };
+
   return (
-    <div>
-      <h2>Login Page</h2>
+    <section className="login">
+    <div className="content">
+    <div className="heading">
+    <p>One Portal App Login</p>
+    </div>
       <form onSubmit={handleLogin}>
-        <label>
+      <div className={`form-group, position-relative`}>
+        <label >
           Username:
           <input
             type="text"
             value={username}
+            className={'form-control'}
+            placeholder="Enter Email"
             onChange={(e) => setUsername(e.target.value)}
           />
         </label>
-        <br />
+        </div>
+        <div className={`form-group, position-relative`}>
         <label>
           Password:
           <input
             type="password"
             value={password}
+            className={'form-control'}
+            placeholder="************"
             onChange={(e) => setPassword(e.target.value)}
           />
         </label>
-        <br />
-        <button type="submit">Login</button>
+        </div>
+        <button type="submit"
+        className={`btn-theme, button`}
+        >Login</button>
       </form>
+      {error && <p className="error-message">{error}</p>}
     </div>
+    </section>
   );
 };
 
